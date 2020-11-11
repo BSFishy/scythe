@@ -1,4 +1,5 @@
 # Scythe
+[![Build](https://img.shields.io/github/workflow/status/BSFishy/scythe/Rust)](https://github.com/BSFishy/scythe/actions?query=workflow%3ARust)
 [![GitHub](https://img.shields.io/github/license/BSFishy/scythe)](https://github.com/BSFishy/scythe/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/crates/d/scythe?logo=rust)](https://crates.io/crates/scythe)
 [![Version](https://img.shields.io/crates/v/scythe?logo=rust)](https://crates.io/crates/scythe)
