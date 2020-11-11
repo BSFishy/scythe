@@ -24,7 +24,7 @@ jobs:
           ~/.cargo/registry
           ~/.cargo/git
           target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/benches/**.rs', '**/src/**.rs', '**/tests/**.rs', '**/Cargo.toml', '**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock') }}
     - name: Build
       run: cargo build --workspace --verbose
     - name: Test
