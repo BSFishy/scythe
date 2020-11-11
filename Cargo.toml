@@ -14,9 +14,13 @@ license = "MIT"
 members = ["crates/*"]
 
 [features]
-default = ["paths"]
+default = ["data", "paths", "platform"]
 
+data = ["scythe_data"]
 paths = ["scythe_paths"]
+platform = ["scythe_platform"]
 
 [dependencies]
+scythe_data = { path = "crates/data", version = "0.1.0", optional = true }
 scythe_paths = { path = "crates/paths", version = "0.1.0", optional = true }
+scythe_platform = { path = "crates/platform", version = "0.1.0", optional = true }
