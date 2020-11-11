@@ -16,7 +16,7 @@ pub fn get_temp_dir() -> Option<PathBuf> {
             None
         }
     } else if cfg!(target_os = "macos") {
-        if let Ok(path) = var("TEMPDIR") {
+        if let Ok(path) = var("TMPDIR") {
             Some(PathBuf::from(path))
         } else {
             None
