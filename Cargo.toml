@@ -3,11 +3,12 @@ name = "scythe"
 version = "0.1.0"
 authors = ["Matt Provost <mattprovost6@gmail.com>"]
 edition = "2018"
-description = ""
+description = "A library and tool set for creating applications with Rust"
+documentation = "https://docs.rs/scythe"
 readme = "README.md"
-repository = ""
+homepage = "https://github.com/BSFishy/scythe"
+repository = "https://github.com/BSFishy/scythe"
 license = "MIT"
-license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
