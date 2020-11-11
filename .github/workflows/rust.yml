@@ -24,24 +24,12 @@ jobs:
           ~/.cargo/registry
           ~/.cargo/git
           target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/benches/**.rs', '**/src/**.rs', '**/tests/**.rs', '**/Cargo.toml', '**/Cargo.lock') }}
     - name: Build
       run: cargo build --workspace --verbose
-  test:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.platform }}
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Test
-        run: cargo test --workspace --verbose
+    - name: Test
+      run: cargo test --workspace --verbose
+    - name: Check
+      run: cargo check --workspace --verbose
+    - name: Clippy
+      run: cargo clippy --workspace --verbose
