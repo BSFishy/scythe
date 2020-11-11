@@ -49,17 +49,18 @@ mod tests {
         let path = get_temp_dir();
 
         if cfg!(any(target_os = "windows", target_os = "macos")) {
-            assert!(match path {
-                Some(p) => p.exists() && p.is_dir(),
-                None => false,
-            }, "windows and mac should return a valid directory from an environment variable")
+            assert!(path.is_some(), "should have gotten a path");
+
+            let path = path.unwrap();
+            assert!(path.exists(), "the path should exist");
+            assert!(path.is_dir(), "the path should be a directory");
         } else if cfg!(target_os = "linux") {
             assert!(match path {
                 Some(buf) => buf.to_str().unwrap() == "/tmp",
                 None => false,
-            }, "linux should return \"/tmp\"")
+            }, "linux should return \"/tmp\"");
         } else {
-            assert!(path.is_none(), "unknown platform should return none")
+            assert!(path.is_none(), "unknown platform should return none");
         }
     }
 
