@@ -10,6 +10,13 @@ homepage = "https://github.com/BSFishy/scythe"
 repository = "https://github.com/BSFishy/scythe"
 license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace]
+members = ["crates/*"]
+
+[features]
+default = ["paths"]
+
+paths = ["scythe_paths"]
 
 [dependencies]
+scythe_paths = { path = "crates/paths", version = "0.1.0", optional = true }
