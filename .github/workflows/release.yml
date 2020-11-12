@@ -13,10 +13,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    - name: Cargo cache
+      uses: actions/cache@v2
+      id: cache
+      with:
+        path: |
+          ~/.cargo
+        key: Cargo-cache
+    - name: Install Cargo workspaces
+      uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-workspaces
     - name: Build
       run: cargo build --release --workspace --verbose
+    - name: Login
+      run: cargo login ${{ secrets.CRATES_TOKEN }}
     - name: Publish
-      run: cargo publish --token ${{ secrets.CRATES_TOKEN }}
+      run: cargo workspaces publish --yes --from-git
+    - name: Logout
+      run: rm ~/.cargo/credentials
+    - name: Install Cargo cache
+      uses: actions-rs/install@v0.1
+      if: steps.cache.outputs.cache-hit != 'true'
+      with:
+        crate: cargo-cache
+    - name: Cleanup cache
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: cargo cache -a
   release:
     runs-on: ubuntu-latest
     steps:

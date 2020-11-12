@@ -1,6 +1,6 @@
 [package]
 name = "scythe"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Matt Provost <mattprovost6@gmail.com>"]
 edition = "2018"
 description = "A library and tool set for creating applications with Rust"
