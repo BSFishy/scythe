@@ -41,6 +41,7 @@ jobs:
       - name: Clippy
         uses: actions-rs/clippy-check@v1.0.7
         with:
+          toolchain: ${{ matrix.toolchain }}
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --release --workspace --all-features
       - name: Install Cargo cache
@@ -114,6 +115,7 @@ jobs:
       - name: Clippy
         uses: actions-rs/clippy-check@v1.0.7
         with:
+          toolchain: ${{ matrix.toolchain }}
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --release --workspace --all-features
       - name: Install Cargo cache
