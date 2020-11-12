@@ -3,6 +3,11 @@ name = "scythe_platform"
 version = "0.1.0"
 authors = ["Matt Provost <mattprovost6@gmail.com>"]
 edition = "2018"
+description = "A Scythe module for working with platforms"
+documentation = "https://docs.rs/scythe"
+homepage = "https://github.com/BSFishy/scythe"
+repository = "https://github.com/BSFishy/scythe"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
