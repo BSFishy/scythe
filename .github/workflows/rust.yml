@@ -39,7 +39,7 @@ jobs:
       - name: Check
         run: cargo check --release --workspace --verbose
       - name: Clippy
-        uses: actions-rs/clippy-check@v1
+        uses: actions-rs/clippy-check@v1.0.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --release --workspace --all-features
@@ -112,7 +112,7 @@ jobs:
       - name: Check
         run: cargo check --release --workspace --verbose
       - name: Clippy
-        uses: actions-rs/clippy-check@v1
+        uses: actions-rs/clippy-check@v1.0.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --release --workspace --all-features
