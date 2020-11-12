@@ -40,6 +40,7 @@ jobs:
         run: cargo check --release --workspace --verbose
       - name: Clippy
         uses: actions-rs/clippy-check@v1.0.7
+        if: matrix.platform == 'ubuntu-latest' && matrix.toolchain == 'stable'
         with:
           toolchain: ${{ matrix.toolchain }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +54,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: cargo cache -a
       - name: Cleanup windows cache
-        if: steps.cache.outputs.cache-hit != 'true' && matrix.os == 'windows-latest'
+        if: steps.cache.outputs.cache-hit != 'true' && matrix.platform == 'windows-latest'
         shell: bash
         run: |
           rm -rf ~/.cargo/git/checkouts
@@ -114,6 +115,7 @@ jobs:
         run: cargo check --release --workspace --verbose
       - name: Clippy
         uses: actions-rs/clippy-check@v1.0.7
+        if: matrix.platform == 'ubuntu-latest' && matrix.toolchain == 'stable'
         with:
           toolchain: ${{ matrix.toolchain }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -127,7 +129,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: cargo cache -a
       - name: Cleanup windows cache
-        if: steps.cache.outputs.cache-hit != 'true' && matrix.os == 'windows-latest'
+        if: steps.cache.outputs.cache-hit != 'true' && matrix.platform == 'windows-latest'
         shell: bash
         run: |
           rm -rf ~/.cargo/git/checkouts
