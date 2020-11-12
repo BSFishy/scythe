@@ -2,21 +2,24 @@ name: Rust
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  build-debug:
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
+    if: github.ref == 'refs/heads/develop'
     steps:
     - uses: actions/checkout@v2
+    - name: Generate Cargo.lock
+      run: cargo generate-lockfile --verbose
     - name: Cargo cache
       uses: actions/cache@v2
       with:
@@ -33,3 +36,29 @@ jobs:
       run: cargo check --workspace --verbose
     - name: Clippy
       run: cargo clippy --workspace --verbose
+  build-release:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate Cargo.lock
+        run: cargo generate-lockfile --verbose
+      - name: Cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --release --workspace --verbose
+      - name: Test
+        run: cargo test --release --workspace --verbose
+      - name: Check
+        run: cargo check --release --workspace --verbose
+      - name: Clippy
+        run: cargo clippy --release --workspace --verbose
