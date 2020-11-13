@@ -12,15 +12,24 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-debug:
+  build:
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
         toolchain: [stable, nightly]
+        type: [debug, release]
+        release: ${{ contains(github.ref, 'main') }}
+        exclude:
+          - type: debug
+            release: true
+          - type: release
+            release: false
     runs-on: ${{ matrix.platform }}
-    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
+      - name: Set release flag
+        if: github.ref == 'refs/heads/main'
+        run: echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -33,95 +42,20 @@ jobs:
           path: |
             ~/.cargo
             target
-          key: ${{ runner.os }}-cargo-${{ matrix.toolchain }}-debug-${{ hashFiles('**/Cargo.toml') }}
+          key: ${{ runner.os }}-cargo-${{ matrix.toolchain }}-${{ matrix.type }}-${{ hashFiles('**/Cargo.toml') }}
       - name: Build
-        run: cargo build --release --workspace --verbose
+        run: cargo build ${{ env.RELEASE_FLAG }} --workspace --verbose
       - name: Test
-        run: cargo test --release --workspace --verbose
+        run: cargo test ${{ env.RELEASE_FLAG }} --workspace --verbose
       - name: Check
-        run: cargo check --release --workspace --verbose
+        run: cargo check ${{ env.RELEASE_FLAG }} --workspace --verbose
       - name: Clippy
         uses: actions-rs/clippy-check@v1.0.7
         if: matrix.platform == 'ubuntu-latest' && matrix.toolchain == 'stable'
         with:
           toolchain: ${{ matrix.toolchain }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --release --workspace --all-features
-      - name: Install Cargo cache
-        uses: actions-rs/install@v0.1
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          crate: cargo-cache
-      - name: Cleanup cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: cargo cache -a
-      - name: Cleanup windows cache
-        if: steps.cache.outputs.cache-hit != 'true' && matrix.platform == 'windows-latest'
-        shell: bash
-        run: |
-          rm -rf ~/.cargo/git/checkouts
-          rm -rf ~/.cargo/registry/index
-#  build-debug:
-#    strategy:
-#      matrix:
-#        platform: [ubuntu-latest, macos-latest, windows-latest]
-#    runs-on: ${{ matrix.platform }}
-#    if: github.ref == 'refs/heads/develop'
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Generate Cargo.lock
-#      run: cargo generate-lockfile --verbose
-#    - name: Cargo cache
-#      uses: actions/cache@v2
-#      with:
-#        path: |
-#          ~/.cargo/registry
-#          ~/.cargo/git
-#          target
-#        key: ${{ runner.os }}-cargo-debug-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock') }}
-#    - name: Build
-#      run: cargo build --workspace --verbose
-#    - name: Test
-#      run: cargo test --workspace --verbose
-#    - name: Check
-#      run: cargo check --workspace --verbose
-#    - name: Clippy
-#      run: cargo clippy --workspace --verbose
-  build-release:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-        toolchain: [stable, nightly]
-    runs-on: ${{ matrix.platform }}
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: ${{ matrix.toolchain }}
-          override: true
-      - name: Cargo cache
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: |
-            ~/.cargo
-            target
-          key: ${{ runner.os }}-cargo-${{ matrix.toolchain }}-release-${{ hashFiles('**/Cargo.toml') }}
-      - name: Build
-        run: cargo build --release --workspace --verbose
-      - name: Test
-        run: cargo test --release --workspace --verbose
-      - name: Check
-        run: cargo check --release --workspace --verbose
-      - name: Clippy
-        uses: actions-rs/clippy-check@v1.0.7
-        if: matrix.platform == 'ubuntu-latest' && matrix.toolchain == 'stable'
-        with:
-          toolchain: ${{ matrix.toolchain }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --release --workspace --all-features
+          args: ${{ env.RELEASE_FLAG }} --workspace --all-features
       - name: Install Cargo cache
         uses: actions-rs/install@v0.1
         if: steps.cache.outputs.cache-hit != 'true'
