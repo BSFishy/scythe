@@ -18,7 +18,8 @@ jobs:
         platform: [ ubuntu-latest, macos-latest, windows-latest ]
         toolchain: [ stable, nightly ]
         type: [ debug, release ]
-        release: [ ${{ contains(github.ref, 'main') }} ]
+        release:
+          - ${{ contains(github.ref, 'main') }}
         exclude:
           - type: debug
             release: true
